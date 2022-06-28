@@ -1,0 +1,48 @@
+html { 
+    box-sizing: border-box;
+}
+
+*, *::before,  *::after {
+    box-sizing: inherit;
+}
+
+html, body {
+    height: auto;
+}
+
+body {
+    font-family: 'Montesserat', sans-serif;
+    background-color: #41B3A3;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    height: 600px;
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+}
+
+.display {
+    height: 100px;
+    width: 400px;
+}
+
+.buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    height: 500px;
+    width: 400px;
+}
+
+.btn {
+    font-family: inherit;
+    height: 60px;
+    width: 60px;
+    border-radius: 50%;
+}

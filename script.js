@@ -1,3 +1,7 @@
+let prev_num;
+let current_num;
+let inputs = [];
+let operator_input;
 /* Operations */
 function add(operand1, operand2) {return operand1 + operand2}; 
 function subtract(operand1, operand2) {return operand1 - operand2};
@@ -7,12 +11,16 @@ function divide(operand1, operand2) {return (operand2 === 0) ? alert('Woah buddy
 function operate(operator, num1, num2) {
     switch(true){
         case operator === 'add':
+            console.log(add(num1, num2));
             return add(num1, num2);
         case operator === 'subtract':
+            console.log(subtract(num1, num2));
             return subtract(num1, num2);
         case operator === 'multiply':
+            console.log(multiply(num1, num2));
             return multiply(num1, num2);
         case operator === 'divide':
+            console.log(divide(num1, num2));
             return divide(num1, num2);
         default:
             break;
@@ -32,3 +40,21 @@ function operate(operator, num1, num2) {
 
 
 */
+
+/* 
+
+*/
+function readyOperation(input) {
+    if (input.target.classList.contains('num')) {
+        inputs.push(parseInt(input.target.textContent));
+    }
+    else if (input.target.classList.contains('operator')) {
+        operator_input = input.target.id;
+    }
+    else if (input.target.id == 'operate') {
+        operate(operator_input, ...inputs);
+    }
+}
+
+const BUTTONS = document.querySelectorAll('btn');
+BUTTONS.forEach(button => button.addEventListener('click', readyOperation));

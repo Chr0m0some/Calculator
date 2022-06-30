@@ -80,5 +80,5 @@ function readyOperation(input) {
     }
 }
 
-const BUTTONS = document.querySelectorAll('btn');
+const BUTTONS = document.querySelectorAll('.btn');
 BUTTONS.forEach(button => button.addEventListener('click', readyOperation));

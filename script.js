@@ -8,15 +8,15 @@ let inputs = [];
 let active_operator;
 
 /* Operations */
-function add(operand1, operand2) {return (operand1 + operand2).toString()}; 
-function subtract(operand1, operand2) {return (operand1 - operand2).toString()};
-function multiply(operand1, operand2) {return (operand1 * operand2).toString()};
-function divide(operand1, operand2) {return (operand2 === 0) ? alert('Woah buddy...') : (operand1 / operand2).toString()};
+function add(operand1, operand2) { return (operand1 + operand2).toString() };
+function subtract(operand1, operand2) { return (operand1 - operand2).toString() };
+function multiply(operand1, operand2) { return (operand1 * operand2).toString() };
+function divide(operand1, operand2) { return (operand2 === 0) ? alert('Woah buddy...') : (operand1 / operand2).toString() };
 
 function operate(operator, num1, num2) {
     num1 = parseInt(num1);
     num2 = parseInt(num2);
-    switch(true){
+    switch (true) {
         case operator === '+':
             console.log(add(num1, num2));
             return add(num1, num2);
@@ -32,7 +32,7 @@ function operate(operator, num1, num2) {
         default:
             break;
     }
-    
+
 }
 
 /* 
@@ -51,46 +51,45 @@ function operate(operator, num1, num2) {
 
 */
 
-function readyOperation(event) {
-    console.log('clicked');
-    console.log(event.target.classList);
-    console.log(event.target.textContent);
-    if (event.target.classList.contains('num')) {
-        if (current_num == 0) { //Evaluates to true when current_num is an empty string or "0"
-            current_num = event.target.textContent;
+function readyNumbers(e) {
+    if (current_num == 0) { //Evaluates to true when current_num is an empty string or "0"
+        current_num = e.target.textContent;
+    }
+    else {
+        current_num += e.target.textContent;
+    }
+    STAGED_AREA.textContent = current_num; 
+}
+
+function changeDisplay(e) {
+    if (prev_num && current_num) {
+        let result = operate(active_operator, prev_num, current_num);
+        if (e.target.id === 'operate') {
+            DOCKED_AREA.textContent = `${prev_num} ${active_operator} ${current_num} =`; 
         }
         else {
-            current_num += event.target.textContent;
+            active_operator = e.target.textContent;
+            DOCKED_AREA.textContent = `${result} ${active_operator}`
         }
-        STAGED_AREA.textContent = current_num; //Update staged display with current_num
+        STAGED_AREA.textContent = result; 
+        prev_num = result; 
+        current_num = ''; 
+        return;
+    }
+    else if (prev_num === '') {
+        prev_num = current_num;
+        current_num = '';
+    }
+    active_operator = e.target.textContent;
+    DOCKED_AREA.textContent = prev_num + ` ${active_operator}`; 
+}
+
+function readyOperation(event) {
+    if (event.target.classList.contains('num')) {
+        readyNumbers(event);
     }
     else if (event.target.classList.contains('operator')) {
-        if (prev_num && current_num) {
-            console.log('did this run');
-            let result = operate(active_operator, prev_num, current_num);
-            if (event.target.id === 'operate') {
-                DOCKED_AREA.textContent = `${prev_num} ${active_operator} ${current_num} =`; //Docked display shows expression 
-            }
-            else {
-                active_operator = event.target.textContent;
-                DOCKED_AREA.textContent = `${result} ${active_operator}`//Docked display shows result concatenated with ` ${input.target.id}`
-            }
-            STAGED_AREA.textContent = result; //Staged display shows result
-            prev_num = result; //Adjust previous number to reference the result
-            current_num = ''; //Reset current_num to be empty
-            return;
-        }
-        else if (prev_num === '') {
-            console.log('starting expression');
-            prev_num = current_num;
-            current_num = '';
-            active_operator = event.target.textContent;
-            DOCKED_AREA.textContent = prev_num + ` ${active_operator}`; //Docked display would have prev_num concatenated with ` ${active_operator}`
-        }
-        else {
-            active_operator = event.target.textContent;
-            DOCKED_AREA.textContent = prev_num + ` ${active_operator}`; //Docked display would have prev_num concatenated with new ` ${active_operator}`
-        }
+        changeDisplay(event);
     }
 }
 

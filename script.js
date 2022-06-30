@@ -1,25 +1,32 @@
-let prev_num;
+const BUTTONS = document.querySelectorAll('.btn');
+const DOCKED_AREA = document.querySelector('.docked');
+const STAGED_AREA = document.querySelector('.staged');
+
+let prev_num = '';
 let current_num = '0';
 let inputs = [];
-let operator_input;
+let active_operator;
+
 /* Operations */
-function add(operand1, operand2) {return operand1 + operand2}; 
-function subtract(operand1, operand2) {return operand1 - operand2};
-function multiply(operand1, operand2) {return operand1 * operand2};
-function divide(operand1, operand2) {return (operand2 === 0) ? alert('Woah buddy...') : operand1 / operand2};
+function add(operand1, operand2) {return (operand1 + operand2).toString()}; 
+function subtract(operand1, operand2) {return (operand1 - operand2).toString()};
+function multiply(operand1, operand2) {return (operand1 * operand2).toString()};
+function divide(operand1, operand2) {return (operand2 === 0) ? alert('Woah buddy...') : (operand1 / operand2).toString()};
 
 function operate(operator, num1, num2) {
+    num1 = parseInt(num1);
+    num2 = parseInt(num2);
     switch(true){
-        case operator === 'add':
+        case operator === '+':
             console.log(add(num1, num2));
             return add(num1, num2);
-        case operator === 'subtract':
+        case operator === '-':
             console.log(subtract(num1, num2));
             return subtract(num1, num2);
-        case operator === 'multiply':
+        case operator === '×':
             console.log(multiply(num1, num2));
             return multiply(num1, num2);
-        case operator === 'divide':
+        case operator === '÷':
             console.log(divide(num1, num2));
             return divide(num1, num2);
         default:
@@ -44,41 +51,47 @@ function operate(operator, num1, num2) {
 
 */
 
-function readyOperation(input) {
-    if (input.target.classList.contains('num')) {
-        if (current_num == 0 || current_num === null) { //Should change current_num whether current_num is the default of string 0 or null
-            current_num = input.target.textContent;
+function readyOperation(event) {
+    console.log('clicked');
+    console.log(event.target.classList);
+    console.log(event.target.textContent);
+    if (event.target.classList.contains('num')) {
+        if (current_num == 0) { //Evaluates to true when current_num is an empty string or "0"
+            current_num = event.target.textContent;
         }
         else {
-            current_num += input.target.textContent;
+            current_num += event.target.textContent;
         }
-        //Update staged display with current_num
+        STAGED_AREA.textContent = current_num; //Update staged display with current_num
     }
-    else if (input.target.classList.contains('operator')) {
+    else if (event.target.classList.contains('operator')) {
         if (prev_num && current_num) {
-            operate(operator_input, prev_num, current_num)
-            if (operator_input === 'operate') {
-                //Docked display shows expression 
-                //Staged display shows result
+            console.log('did this run');
+            let result = operate(active_operator, prev_num, current_num);
+            if (event.target.id === 'operate') {
+                DOCKED_AREA.textContent = `${prev_num} ${active_operator} ${current_num} =`; //Docked display shows expression 
             }
             else {
-                //Docked display shows result concatenated with ` ${input.target.id}`
-                //Staged display shows result
+                active_operator = event.target.textContent;
+                DOCKED_AREA.textContent = `${result} ${active_operator}`//Docked display shows result concatenated with ` ${input.target.id}`
             }
+            STAGED_AREA.textContent = result; //Staged display shows result
+            prev_num = result; //Adjust previous number to reference the result
+            current_num = ''; //Reset current_num to be empty
+            return;
         }
-        else if (prev_num === null) {
+        else if (prev_num === '') {
+            console.log('starting expression');
             prev_num = current_num;
-            current_num = null;
-            operator_input = input.target.id;
-            //Docked display would have prev_num concatenated with ` ${operator_input}`
-            //Staged display shows prev_num
+            current_num = '';
+            active_operator = event.target.textContent;
+            DOCKED_AREA.textContent = prev_num + ` ${active_operator}`; //Docked display would have prev_num concatenated with ` ${active_operator}`
         }
         else {
-            operator_input = input.target.id;
-            //Docked display would have prev_num concatenated with new ` ${operator_input}`
+            active_operator = event.target.textContent;
+            DOCKED_AREA.textContent = prev_num + ` ${active_operator}`; //Docked display would have prev_num concatenated with new ` ${active_operator}`
         }
     }
 }
 
-const BUTTONS = document.querySelectorAll('.btn');
 BUTTONS.forEach(button => button.addEventListener('click', readyOperation));

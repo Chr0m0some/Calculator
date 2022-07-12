@@ -8,4 +8,3 @@
 
 # Issues and Concerns
 1. Make it so that when the user presses '0' it clears the prev_num. Current way of handling it is a little unintuitive.
-2. first commit
